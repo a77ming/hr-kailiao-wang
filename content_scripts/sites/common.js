@@ -49,7 +49,7 @@ class BaseParser {
     }
 
     setFilterSettings(settings) {
-        this.filterSettings = settings;
+        this.filterSettings = { ...this.filterSettings, ...settings };
     }
 
     // 基础的筛选方法
@@ -71,22 +71,28 @@ class BaseParser {
         // 年龄筛选 - 硬性要求，优先检查
         if (this.filterSettings.enableAgeFilter) {
             console.log('🎯 年龄筛选已启用');
-            const candidateAge = parseInt(candidate.age);
-            console.log(`📊 候选人年龄: ${candidateAge}, 设置范围: ${this.filterSettings.ageMin}-${this.filterSettings.ageMax}`);
-            
-            if (candidateAge && candidateAge > 0) {
-                if (this.filterSettings.ageMin && candidateAge < this.filterSettings.ageMin) {
-                    console.log(`❌ 年龄不符合要求: ${candidateAge}岁 < ${this.filterSettings.ageMin}岁`);
-                    return false;
-                }
-                if (this.filterSettings.ageMax && candidateAge > this.filterSettings.ageMax) {
-                    console.log(`❌ 年龄不符合要求: ${candidateAge}岁 > ${this.filterSettings.ageMax}岁`);
-                    return false;
-                }
-                console.log('✅ 年龄筛选通过');
-            } else {
-                console.log('⚠️ 候选人年龄信息无效或缺失');
+            const candidateAge = parseInt(candidate.age, 10);
+
+            // 如果年龄信息无效或缺失，则直接过滤
+            if (isNaN(candidateAge) || candidateAge <= 0) {
+                console.log('❌ 年龄信息无效或缺失，已过滤');
+                return false;
             }
+
+            console.log(`📊 候选人年龄: ${candidateAge}, 设置范围: ${this.filterSettings.ageMin}-${this.filterSettings.ageMax}`);
+
+            const minAge = this.filterSettings.ageMin;
+            const maxAge = this.filterSettings.ageMax;
+
+            if (minAge != null && candidateAge < minAge) {
+                console.log(`❌ 年龄不符合要求: ${candidateAge}岁 < ${minAge}岁`);
+                return false;
+            }
+            if (maxAge != null && candidateAge > maxAge) {
+                console.log(`❌ 年龄不符合要求: ${candidateAge}岁 > ${maxAge}岁`);
+                return false;
+            }
+            console.log('✅ 年龄筛选通过');
         } else {
             console.log('⚪ 年龄筛选未启用');
         }
