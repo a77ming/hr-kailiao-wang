@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>修复验证测试页面</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        .test-info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        .candidate-card-wrap { 
+            background: #f9f9f9; 
+            padding: 15px; 
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .name { font-weight: bold; color: #333; font-size: 16px; margin-bottom: 8px; }
+        .job-card-left { color: #666; margin: 5px 0; }
+        .base-info { color: #888; margin: 5px 0; }
+        .content { color: #555; margin: 5px 0; }
+        .btn-greet { 
+            background: #007bff; 
+            color: white; 
+            padding: 8px 15px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .expected {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .should-match {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .should-filter {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .critical {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 修复验证测试页面</h1>
+    
+    <div class="test-info">
+        <h3>🎯 测试目标</h3>
+        <p>验证年龄筛选是否在随机点击<strong>之前</strong>执行，确保37岁的候选人不会被打招呼。</p>
+        
+        <h3>⚙️ 测试设置</h3>
+        <ul>
+            <li><strong>年龄范围：</strong>22-32岁</li>
+            <li><strong>最低学历：</strong>大专</li>
+            <li><strong>启用AI匹配：</strong>是</li>
+        </ul>
+        
+        <h3>🔍 关键修复</h3>
+        <p>将筛选逻辑移到了随机点击<strong>之前</strong>，不符合年龄或学历要求的候选人会被直接跳过，不会进入后续的点击和AI匹配流程。</p>
+    </div>
+
+    <div class="candidate-card-wrap">
+        <div class="name">测试候选人1 - 符合条件</div>
+        <div class="job-card-left">28岁 | 3年经验</div>
+        <div class="base-info">本科 | 计算机科学</div>
+        <div class="content">某大学</div>
+        <div class="content">Java开发工程师，熟悉Spring框架</div>
+        <button class="btn-greet">立即沟通</button>
+        <div class="expected should-match">✅ 应该匹配 - 年龄28岁（符合22-32岁），本科学历（高于大专）</div>
+    </div>
+
+    <div class="candidate-card-wrap">
+        <div class="name">测试候选人2 - 年龄超出（关键测试）</div>
+        <div class="job-card-left">37岁 | 8年经验</div>
+        <div class="base-info">硕士 | 软件工程</div>
+        <div class="content">某大学</div>
+        <div class="content">高级Java开发工程师，架构师经验丰富</div>
+        <button class="btn-greet">立即沟通</button>
+        <div class="expected should-filter critical">❌ 应该被过滤 - 年龄37岁（超出32岁上限）- 这是关键测试用例！</div>
+    </div>
+
+    <div class="candidate-card-wrap">
+        <div class="name">测试候选人3 - 符合条件</div>
+        <div class="job-card-left">30岁 | 5年经验</div>
+        <div class="base-info">大专 | 软件技术</div>
+        <div class="content">某职业学院</div>
+        <div class="content">前端开发工程师，熟悉Vue、React</div>
+        <button class="btn-greet">立即沟通</button>
+        <div class="expected should-match">✅ 应该匹配 - 年龄30岁（符合22-32岁），大专学历（符合最低要求）</div>
+    </div>
+
+    <div class="candidate-card-wrap">
+        <div class="name">测试候选人4 - 年龄不足</div>
+        <div class="job-card-left">20岁 | 1年经验</div>
+        <div class="base-info">本科 | 计算机科学</div>
+        <div class="content">某大学</div>
+        <div class="content">实习生，学习能力强</div>
+        <button class="btn-greet">立即沟通</button>
+        <div class="expected should-filter">❌ 应该被过滤 - 年龄20岁（低于22岁下限）</div>
+    </div>
+
+    <div class="candidate-card-wrap">
+        <div class="name">测试候选人5 - 学历不足</div>
+        <div class="job-card-left">25岁 | 2年经验</div>
+        <div class="base-info">高中 | 自学</div>
+        <div class="content">某高中</div>
+        <div class="content">自学程序员，有项目经验</div>
+        <button class="btn-greet">立即沟通</button>
+        <div class="expected should-filter">❌ 应该被过滤 - 高中学历（低于大专要求）</div>
+    </div>
+
+    <script>
+        console.log('🔧 修复验证测试页面已加载');
+        console.log('');
+        console.log('🎯 关键测试目标：');
+        console.log('验证37岁的候选人是否会被年龄筛选直接过滤掉');
+        console.log('');
+        console.log('⚙️ 请按以下步骤测试：');
+        console.log('1. 在插件中设置年龄范围：22-32岁');
+        console.log('2. 设置最低学历：大专');
+        console.log('3. 启用年龄筛选和学历筛选');
+        console.log('4. 可选：启用AI匹配并输入JD');
+        console.log('5. 开始自动滚动');
+        console.log('');
+        console.log('🔍 观察要点：');
+        console.log('- 控制台应该显示"❌ 筛选条件不匹配，跳过候选人: 测试候选人2"');
+        console.log('- 37岁的候选人应该被直接跳过，不会进入AI匹配流程');
+        console.log('- 不应该看到"立即沟通"按钮被点击');
+        console.log('');
+        console.log('✅ 预期匹配的候选人：测试候选人1、测试候选人3');
+        console.log('❌ 预期被过滤的候选人：测试候选人2（37岁）、测试候选人4（20岁）、测试候选人5（高中）');
+    </script>
+</body>
+</html>

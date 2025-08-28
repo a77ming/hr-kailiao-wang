@@ -1,0 +1,70 @@
+{
+	"manifest_version": 3,
+		"name": "HR开聊王",
+		"version": "1.0",
+
+	"description": "AI智能开聊神器，让HR招聘更高效！支持智能筛选，精准匹配候选人。",
+
+	"icons": {
+		"16": "icons/16.png",
+		"32": "icons/32.png",
+		"48": "icons/48.png",
+		"128": "icons/128.png"
+	},
+	"permissions": [
+		"activeTab",
+		"tabs",
+		"storage",
+		"downloads"
+	],
+	"host_permissions": [
+		"*://*.zhipin.com/*",
+		"*://*.lagou.com/*",
+		"*://*.zhaopin.com/*",
+		"*://*.liepin.com/*",
+		"*://*.grasswave.cn/*",
+		"*://*.58it.cn/*",
+		"https://tbai.xin/*"
+	],
+
+
+	"web_accessible_resources": [{
+		"resources": [
+			"content_scripts/sites/*.js",
+			"sounds/*.mp3"
+		],
+		"matches": ["<all_urls>"]
+	}],
+
+	"content_scripts": [{
+		"matches": [
+			"*://*.zhipin.com/*",
+			"*://*.lagou.com/*",
+			"*://*.zhaopin.com/*",
+			"*://*.liepin.com/*",
+			"*://*.grasswave.cn/*"
+		],
+		"js": [
+			"content_scripts/sites/boss_resume_downloader.js",
+			"content_scripts/resume_downloader.js",
+			"content_scripts/index.js"
+		],
+		"all_frames": true,
+		"match_about_blank": true
+	}],
+
+	"action": {
+		"default_icon": {
+			"16": "icons/16.png",
+			"32": "icons/32.png",
+			"48": "icons/48.png",
+			"128": "icons/128.png"
+		},
+		"default_title": "HR开聊王",
+		"default_popup": "popup/index.html"
+	},
+	
+	"background": {
+		"service_worker": "background.js"
+	}
+}

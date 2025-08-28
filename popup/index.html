@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+    <title>HR开聊王</title>
+		<style>
+			* {
+                box-sizing: border-box;
+            }
+
+            body {
+                width: 400px;
+                height: 620px;
+                margin: 0;
+                padding: 0;
+                font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+                background: linear-gradient(145deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+                color: #2c3e50;
+                overflow: hidden;
+            }
+
+            .app-container {
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(15px);
+                -webkit-backdrop-filter: blur(15px);
+                border-radius: 20px;
+                margin: 8px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            /* Header */
+            .header {
+                padding: 20px 24px 16px;
+                background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+                color: white;
+                position: relative;
+                border-radius: 20px 20px 0 0;
+                overflow: hidden;
+            }
+
+            .header::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.05) 2px,
+                    rgba(255, 255, 255, 0.05) 4px
+                );
+                animation: slide 20s linear infinite;
+            }
+
+            @keyframes slide {
+                0% { transform: translate(-50%, -50%) rotate(0deg); }
+                100% { transform: translate(-50%, -50%) rotate(360deg); }
+            }
+
+            .header-content {
+                position: relative;
+                z-index: 2;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .logo {
+                width: 40px;
+                height: 40px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                backdrop-filter: blur(10px);
+            }
+
+            .title-section {
+                flex: 1;
+            }
+
+            .app-title {
+                font-size: 22px;
+                font-weight: 800;
+                margin: 0 0 2px 0;
+                letter-spacing: -0.5px;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .app-subtitle {
+                font-size: 12px;
+                opacity: 0.9;
+                margin: 0;
+                font-weight: 500;
+            }
+
+            .version-badge {
+                background: rgba(255, 255, 255, 0.25);
+                padding: 6px 10px;
+                border-radius: 15px;
+                font-size: 11px;
+                font-weight: 700;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
+
+            /* Content */
+            .content {
+                flex: 1;
+                overflow-y: auto;
+                padding: 8px;
+                background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            }
+
+            .content::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .content::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 3px;
+            }
+
+            .content::-webkit-scrollbar-thumb {
+                background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+                border-radius: 3px;
+            }
+
+            /* Cards */
+            .card {
+                background: rgba(255, 255, 255, 0.9);
+                margin: 8px 12px;
+                border-radius: 18px;
+                padding: 18px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                backdrop-filter: blur(10px);
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+                transition: left 0.5s;
+            }
+
+            .card:hover {
+                transform: translateY(-4px) scale(1.02);
+                box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+            }
+
+            .card:hover::before {
+                left: 100%;
+            }
+
+            .card-title {
+                font-size: 16px;
+                font-weight: 700;
+                margin: 0 0 14px 0;
+                color: #2c3e50;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .card-icon {
+                width: 32px;
+                height: 32px;
+                background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 16px;
+                box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+            }
+
+            /* Form Elements */
+            .form-group {
+                margin-bottom: 16px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .form-group:last-child {
+                margin-bottom: 0;
+            }
+
+            .input-group {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 14px;
+            }
+
+            .input {
+                flex: 1;
+                padding: 14px 18px;
+                border: 2px solid rgba(255, 107, 107, 0.2);
+                border-radius: 15px;
+                font-size: 14px;
+                font-family: inherit;
+                transition: all 0.3s ease;
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(5px);
+            }
+
+            .input:focus {
+                outline: none;
+                border-color: #ff6b6b;
+                background: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
+                transform: translateY(-1px);
+            }
+
+            .textarea {
+                width: 100%;
+                min-height: 90px;
+                padding: 14px 18px;
+                border: 2px solid rgba(255, 107, 107, 0.2);
+                border-radius: 15px;
+                font-size: 14px;
+                font-family: inherit;
+                resize: vertical;
+                transition: all 0.3s ease;
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(5px);
+            }
+
+            .textarea:focus {
+                outline: none;
+                border-color: #ff6b6b;
+                background: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
+                transform: translateY(-1px);
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 15px;
+                font-size: 14px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+            }
+
+            .btn-secondary {
+                background: rgba(108, 117, 125, 0.1);
+                color: #6c757d;
+                border: 2px solid rgba(108, 117, 125, 0.2);
+                padding: 10px 18px;
+                border-radius: 12px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(5px);
+            }
+
+            .btn-secondary:hover {
+                background: rgba(108, 117, 125, 0.2);
+                transform: translateY(-1px);
+            }
+
+            .btn-danger {
+                background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+                color: white;
+                border: none;
+                padding: 10px 18px;
+                border-radius: 12px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3);
+            }
+
+            .btn-danger:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+            }
+
+            /* Tags */
+            .tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 12px;
+            }
+
+            .tag {
+                background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(238, 90, 36, 0.1));
+                padding: 8px 16px;
+                border-radius: 25px;
+                font-size: 12px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.3s ease;
+                cursor: pointer;
+                border: 2px solid rgba(255, 107, 107, 0.2);
+                backdrop-filter: blur(5px);
+                color: #ff6b6b;
+            }
+
+            .tag:hover {
+                background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(238, 90, 36, 0.2));
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
+            }
+
+            .tag.active {
+                background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+                color: white;
+                border-color: #ee5a24;
+                box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            }
+
+            .tag.exclude {
+                background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
+                color: #e74c3c;
+                border-color: rgba(231, 76, 60, 0.3);
+            }
+
+            .tag.exclude:hover {
+                background: linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(192, 57, 43, 0.2));
+            }
+
+            .tag-remove {
+                background: rgba(255, 255, 255, 0.3);
+                border: none;
+                color: inherit;
+                cursor: pointer;
+                padding: 2px 6px;
+                font-size: 12px;
+                border-radius: 50%;
+                opacity: 0.8;
+                transition: all 0.2s ease;
+                font-weight: bold;
+            }
+
+            .tag-remove:hover {
+                opacity: 1;
+                background: rgba(255, 255, 255, 0.5);
+                transform: scale(1.1);
+            }
+
+            /* Switch */
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 52px;
+                height: 28px;
+            }
+
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg, #ddd, #bbb);
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                border-radius: 28px;
+                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 22px;
+                width: 22px;
+                left: 3px;
+                bottom: 3px;
+                background: linear-gradient(135deg, #fff, #f8f9fa);
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                border-radius: 50%;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            input:checked + .slider {
+                background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 12px rgba(255, 107, 107, 0.4);
+            }
+
+            input:checked + .slider:before {
+                transform: translateX(24px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .form-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 12px;
+            }
+
+            .form-label {
+                font-size: 14px;
+                font-weight: 500;
+                color: #1d1d1f;
+            }
+
+            .form-hint {
+                font-size: 12px;
+                color: #8e8e93;
+                margin-top: 4px;
+                line-height: 1.4;
+            }
+
+            /* Number inputs */
+            .number-input {
+                width: 80px;
+                padding: 8px 12px;
+                border: 2px solid #f1f1f1;
+                border-radius: 8px;
+                font-size: 14px;
+                text-align: center;
+                background: #fafafa;
+                transition: all 0.2s ease;
+            }
+
+            .number-input:focus {
+                outline: none;
+                border-color: #007AFF;
+                background: white;
+            }
+
+            .number-group {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            /* Bottom section */
+            .bottom-section {
+                background: rgba(255, 255, 255, 0.9);
+                border-top: 1px solid rgba(255, 107, 107, 0.2);
+                padding: 20px;
+                backdrop-filter: blur(10px);
+                border-radius: 0 0 20px 20px;
+            }
+
+            .action-button {
+                width: 100%;
+                padding: 18px;
+                background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+                color: white;
+                border: none;
+                border-radius: 20px;
+                font-size: 16px;
+                font-weight: 800;
+                cursor: pointer;
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+                margin-bottom: 16px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .action-button::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transition: left 0.5s;
+            }
+
+            .action-button:hover {
+                transform: translateY(-4px) scale(1.02);
+                box-shadow: 0 15px 35px rgba(46, 204, 113, 0.5);
+            }
+
+            .action-button:hover::before {
+                left: 100%;
+            }
+
+            .action-button.stop {
+                background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+                box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+            }
+
+            .action-button.stop:hover {
+                box-shadow: 0 15px 35px rgba(231, 76, 60, 0.5);
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            /* Console */
+            .console {
+                background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+                color: #2ecc71;
+                font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+                padding: 18px;
+                height: 110px;
+                overflow-y: auto;
+                font-size: 12px;
+                line-height: 1.5;
+                border-radius: 15px;
+                border: 2px solid rgba(255, 107, 107, 0.2);
+                box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+                position: relative;
+            }
+
+            .console::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: linear-gradient(90deg, #ff6b6b, #ee5a24, #2ecc71, #3498db);
+                border-radius: 15px 15px 0 0;
+            }
+
+            .console::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .console::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 3px;
+            }
+
+            .console::-webkit-scrollbar-thumb {
+                background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+                border-radius: 3px;
+            }
+
+            .log-entry {
+                display: flex;
+                margin-bottom: 4px;
+                padding: 2px 0;
+                border-radius: 4px;
+                transition: background 0.2s ease;
+            }
+
+            .log-entry:hover {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .log-prefix {
+                color: #95a5a6;
+                margin-right: 10px;
+                font-weight: 700;
+                font-size: 14px;
+            }
+
+            .log-time {
+                color: #7f8c8d;
+                font-size: 10px;
+                margin-right: 10px;
+                opacity: 0.8;
+            }
+
+            .log-success {
+                color: #2ecc71;
+                font-weight: 600;
+            }
+
+            .log-error {
+                color: #e74c3c;
+                font-weight: 600;
+            }
+
+            .log-warning {
+                color: #f39c12;
+                font-weight: 600;
+            }
+
+            .log-info {
+                color: #3498db;
+                font-weight: 500;
+            }
+
+            /* Animations */
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            .card {
+                animation: fadeIn 0.3s ease-out;
+            }
+
+            /* Monitor Styles */
+            .monitor-content {
+                position: relative;
+                z-index: 1;
+            }
+
+            .status-indicators {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 20px;
+                padding: 16px;
+                background: rgba(255, 255, 255, 0.6);
+                border-radius: 12px;
+                backdrop-filter: blur(5px);
+            }
+
+            .status-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+                flex: 1;
+            }
+
+            .status-dot {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: #ddd;
+                transition: all 0.3s ease;
+                position: relative;
+            }
+
+            .status-dot.active {
+                background: #2ecc71;
+                box-shadow: 0 0 12px rgba(46, 204, 113, 0.6);
+            }
+
+            .status-dot.active::after {
+                content: '';
+                position: absolute;
+                top: -2px;
+                left: -2px;
+                right: -2px;
+                bottom: -2px;
+                border-radius: 50%;
+                background: rgba(46, 204, 113, 0.3);
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.2); opacity: 0.7; }
+                100% { transform: scale(1); opacity: 1; }
+            }
+
+            .status-label {
+                font-size: 11px;
+                color: #666;
+                font-weight: 500;
+            }
+
+            .status-count {
+                font-size: 14px;
+                font-weight: 700;
+                color: #2c3e50;
+            }
+
+            .current-resume {
+                background: rgba(255, 255, 255, 0.6);
+                border-radius: 12px;
+                padding: 16px;
+                margin-bottom: 20px;
+                backdrop-filter: blur(5px);
+                border: 1px solid rgba(255, 107, 107, 0.2);
+            }
+
+            .resume-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid rgba(255, 107, 107, 0.2);
+            }
+
+            .resume-title {
+                font-size: 14px;
+                font-weight: 600;
+                color: #2c3e50;
+            }
+
+            .resume-status {
+                font-size: 12px;
+                padding: 4px 8px;
+                border-radius: 8px;
+                font-weight: 500;
+                background: rgba(108, 117, 125, 0.1);
+                color: #6c757d;
+            }
+
+            .resume-status.processing {
+                background: rgba(255, 193, 7, 0.2);
+                color: #f39c12;
+            }
+
+            .resume-status.success {
+                background: rgba(46, 204, 113, 0.2);
+                color: #27ae60;
+            }
+
+            .resume-status.failed {
+                background: rgba(231, 76, 60, 0.2);
+                color: #e74c3c;
+            }
+
+            .resume-info {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .info-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 12px;
+            }
+
+            .info-label {
+                color: #666;
+                font-weight: 500;
+            }
+
+            .info-value {
+                color: #2c3e50;
+                font-weight: 600;
+                max-width: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+
+            .stat-item {
+                background: rgba(255, 255, 255, 0.6);
+                border-radius: 12px;
+                padding: 16px;
+                text-align: center;
+                backdrop-filter: blur(5px);
+                border: 1px solid rgba(255, 107, 107, 0.2);
+                transition: all 0.3s ease;
+            }
+
+            .stat-item:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
+            }
+
+            .stat-number {
+                font-size: 20px;
+                font-weight: 800;
+                color: #ff6b6b;
+                margin-bottom: 4px;
+            }
+
+            .stat-label {
+                font-size: 11px;
+                color: #666;
+                font-weight: 500;
+            }
+
+            /* Responsive adjustments */
+            @media (max-height: 600px) {
+                .content {
+                    height: 300px;
+                }
+                
+                .console {
+                    height: 80px;
+                }
+            }
+		</style>
+	</head>
+	<body>
+        <div class="app-container">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-content">
+                    <div class="logo">💬</div>
+                    <div class="title-section">
+                        <h1 class="app-title">HR开聊王</h1>
+                        <p class="app-subtitle">AI智能开聊神器，让招聘更高效</p>
+                    </div>
+                    <div class="version-badge" id="version">v1.0</div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- 岗位管理 -->
+                <div class="card">
+                    <h3 class="card-title">
+                        <div class="card-icon">🎯</div>
+                        目标岗位
+                    </h3>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" id="position-input" class="input" placeholder="添加岗位名称">
+                            <button id="add-position" class="btn-primary">添加</button>
+                        </div>
+                        <div class="tags" id="position-list"></div>
+                    </div>
+                </div>
+
+                <!-- 硬性筛选条件 -->
+                <div class="card">
+                    <h3 class="card-title">
+                        <div class="card-icon">🎯</div>
+                        硬性筛选条件
+                    </h3>
+                    
+                    <!-- 年龄筛选 -->
+                    <div class="form-group">
+                        <div class="form-row">
+                            <label class="form-label">启用年龄筛选</label>
+                            <label class="switch">
+                                <input type="checkbox" id="enable-age-filter">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">年龄范围</label>
+                            <div class="number-group">
+                                <input type="number" id="ageMin" class="number-input" min="18" max="65" placeholder="最小">
+                                <span>-</span>
+                                <input type="number" id="ageMax" class="number-input" min="18" max="65" placeholder="最大">
+                                <span>岁</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 学历筛选 -->
+                    <div class="form-group">
+                        <div class="form-row">
+                            <label class="form-label">启用学历筛选</label>
+                            <label class="switch">
+                                <input type="checkbox" id="enable-education-filter">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">最低学历要求</label>
+                            <select id="education-level" class="input" style="width: 120px;">
+                                <option value="">不限</option>
+                                <option value="初中">初中</option>
+                                <option value="高中">高中</option>
+                                <option value="中专">中专</option>
+                                <option value="大专">大专</option>
+                                <option value="本科">本科</option>
+                                <option value="硕士">硕士</option>
+                                <option value="博士">博士</option>
+                            </select>
+                        </div>
+                        <div class="form-hint">
+                            设置最低学历要求，低于此学历的候选人将被过滤掉
+                        </div>
+                    </div>
+                    
+                    <div class="form-hint">
+                        硬性条件：不符合年龄或学历要求的候选人将被直接过滤，不会进入后续的关键词和AI匹配流程
+                    </div>
+                </div>
+
+                <!-- AI智能匹配 -->
+                <div class="card">
+                    <h3 class="card-title">
+                        <div class="card-icon">🧠</div>
+                        AI智能筛选
+                    </h3>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <label class="form-label">启用AI匹配</label>
+                            <label class="switch">
+                                <input type="checkbox" id="enable-ai-match">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <textarea id="job-description" class="textarea" placeholder="请输入详细的职位描述(JD)，包括技能要求、工作经验、学历要求等...
+
+示例：
+招聘前端开发工程师
+- 3年以上Vue.js开发经验
+- 熟悉TypeScript、Webpack
+- 有移动端开发经验
+- 本科学历，计算机相关专业
+- 年龄25-35岁"></textarea>
+                        <div class="form-hint">
+                            启用后，AI会分析候选人简历与JD的匹配度，只对合适的候选人打招呼
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 关键词筛选 -->
+                <div class="card">
+                    <h3 class="card-title">
+                        <div class="card-icon">🔥</div>
+                        热词过滤
+                    </h3>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <label class="form-label">匹配模式</label>
+                            <label class="switch">
+                                <input type="checkbox" id="keywords-and-mode">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-hint" style="margin-bottom: 12px;">
+                            开启：所有关键词都必须匹配 | 关闭：匹配任一关键词即可
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="keyword-input" class="input" placeholder="输入关键词">
+                            <button id="add-exclude-keyword" class="btn-danger">排除</button>
+                            <button id="add-keyword" class="btn-primary">添加</button>
+                        </div>
+                        <div class="tags" id="keyword-list"></div>
+                        <div class="tags" id="exclude-keyword-list"></div>
+                    </div>
+                </div>
+
+                <!-- 高级设置 -->
+                <div class="card">
+                    <h3 class="card-title">
+                        <div class="card-icon">⚡</div>
+                        开聊设置
+                    </h3>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <label class="form-label">打招呼上限</label>
+                            <input type="number" id="match-limit" class="number-input" min="1" value="200">
+                        </div>
+                        <div class="form-hint">达到此数量后自动停止</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="form-row">
+                            <label class="form-label">随机延迟</label>
+                            <div class="number-group">
+                                <input type="number" id="delay-min" class="number-input" min="1" value="3" max="9">
+                                <span>-</span>
+                                <input type="number" id="delay-max" class="number-input" min="1" value="5" max="10">
+                                <span>秒</span>
+                            </div>
+                        </div>
+                        <div class="form-hint">每次操作间的随机等待时间</div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <label class="form-label">查看频率</label>
+                            <input type="number" id="click-frequency" class="number-input" min="0" max="10" value="7">
+                        </div>
+                        <div class="form-hint">每10个候选人中随机查看的数量</div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <label class="form-label">提示音</label>
+                            <label class="switch">
+                                <input type="checkbox" id="enable-sound" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 运行监控 -->
+                <div class="card" id="monitor-card" style="display: none;">
+                    <h3 class="card-title">
+                        <div class="card-icon">📊</div>
+                        运行监控
+                    </h3>
+                    <div class="monitor-content">
+                        <!-- 状态指示器 -->
+                        <div class="status-indicators">
+                            <div class="status-item">
+                                <div class="status-dot" id="reading-status"></div>
+                                <span class="status-label">简历读取</span>
+                                <span class="status-count" id="reading-count">0</span>
+                            </div>
+                            <div class="status-item">
+                                <div class="status-dot" id="ai-status"></div>
+                                <span class="status-label">AI分析</span>
+                                <span class="status-count" id="ai-count">0</span>
+                            </div>
+                            <div class="status-item">
+                                <div class="status-dot" id="match-status"></div>
+                                <span class="status-label">匹配成功</span>
+                                <span class="status-count" id="match-count-display">0</span>
+                            </div>
+                        </div>
+
+                        <!-- 当前处理的简历信息 -->
+                        <div class="current-resume" id="current-resume">
+                            <div class="resume-header">
+                                <span class="resume-title">当前处理</span>
+                                <span class="resume-status" id="current-status">等待中...</span>
+                            </div>
+                            <div class="resume-info" id="resume-info">
+                                <div class="info-item">
+                                    <span class="info-label">姓名:</span>
+                                    <span class="info-value" id="current-name">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">年龄:</span>
+                                    <span class="info-value" id="current-age">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">学历:</span>
+                                    <span class="info-value" id="current-education">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">AI结果:</span>
+                                    <span class="info-value" id="current-ai-result">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 实时统计 -->
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number" id="total-processed">0</div>
+                                <div class="stat-label">已处理</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="match-rate">0%</div>
+                                <div class="stat-label">匹配率</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="avg-time">0s</div>
+                                <div class="stat-label">平均耗时</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 使用说明 -->
+                <div class="card">
+                    <h3 class="card-title">
+                        <div class="card-icon">🚀</div>
+                        开聊攻略
+                    </h3>
+                    <div style="font-size: 14px; line-height: 1.6; color: #666;">
+                        <p><strong style="color: #007AFF;">AI智能模式（推荐）：</strong></p>
+                        <p>1. 添加岗位并启用AI智能匹配</p>
+                        <p>2. 输入详细的职位描述(JD)</p>
+                        <p>3. 可选择性添加关键词辅助筛选</p>
+                        <p>4. 前往招聘网站推荐页面，点击开始</p>
+                        
+                        <p><strong style="color: #007AFF;">传统模式：</strong></p>
+                        <p>1. 添加岗位和关键词</p>
+                        <p>2. 关闭AI匹配，仅使用关键词筛选</p>
+                        <p>3. 刷新浏览器可暂停运行</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Section -->
+            <div class="bottom-section">
+                <div id="initialButtons">
+                    <button id="scrollButton" class="action-button">
+                        💬 开始智能开聊
+                    </button>
+                </div>
+                
+                <div id="stopButtons" class="hidden">
+                    <button id="stopButton" class="action-button stop">
+                        🛑 停止开聊
+                    </button>
+                </div>
+
+                <!-- Console -->
+                <div class="console" id="log-container">
+                    <div class="log-entry">
+                        <span class="log-prefix">></span>
+                        <span class="log-info">系统就绪，等待开始...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="index.js"></script>
+    </body>
+</html>

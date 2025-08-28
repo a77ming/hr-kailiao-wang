@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>年龄提取调试页面</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .candidate-card-wrap { 
+            background: #f9f9f9; 
+            padding: 15px; 
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .name { font-weight: bold; color: #333; font-size: 16px; }
+        .job-card-left { color: #666; margin: 5px 0; }
+        .base-info { color: #888; margin: 5px 0; }
+        .content { color: #555; margin: 5px 0; }
+        .btn-greet { 
+            background: #007bff; 
+            color: white; 
+            padding: 8px 15px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .debug-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 年龄提取调试页面</h1>
+    <p>这个页面用于调试年龄提取功能。请打开浏览器控制台查看详细的调试信息。</p>
+    
+    <div class="debug-info">
+        <strong>测试设置：</strong>年龄范围 22-32岁，最低学历 大专<br>
+        <strong>预期结果：</strong>只有候选人A和候选人C应该被匹配
+    </div>
+
+    <div class="candidate-card-wrap">
+        <div class="name">候选人A - 应该匹配</div>
+        <div class="job-card-left">28岁 | 3年经验</div>
+        <div class="base-info">本科 | 计算机科学</div>
+        <div class="content">某大学</div>
+        <div class="content">Java开发工程师</div>
+        <button class="btn-greet">立即沟通</button>
+    </div>
+
+    <div class="candidate-card-wrap">
+        <div class="name">候选人B - 年龄超出</div>
+        <div class="job-card-left">37岁 | 8年经验</div>
+        <div class="base-info">硕士 | 软件工程</div>
+        <div class="content">某大学</div>
+        <div class="content">高级Java开发工程师</div>
+        <button class="btn-greet">立即沟通</button>
+    </div>
+
+    <div class="candidate-card-wrap">
+        <div class="name">候选人C - 应该匹配</div>
+        <div class="job-card-left">30岁 | 5年经验</div>
+        <div class="base-info">大专 | 软件技术</div>
+        <div class="content">某职业学院</div>
+        <div class="content">前端开发工程师</div>
+        <button class="btn-greet">立即沟通</button>
+    </div>
+
+    <div class="candidate-card-wrap">
+        <div class="name">候选人D - 年龄不足</div>
+        <div class="job-card-left">20岁 | 1年经验</div>
+        <div class="base-info">本科 | 计算机科学</div>
+        <div class="content">某大学</div>
+        <div class="content">实习生</div>
+        <button class="btn-greet">立即沟通</button>
+    </div>
+
+    <div class="candidate-card-wrap">
+        <div class="name">候选人E - 学历不足</div>
+        <div class="job-card-left">25岁 | 2年经验</div>
+        <div class="base-info">高中 | 自学</div>
+        <div class="content">某高中</div>
+        <div class="content">自学程序员</div>
+        <button class="btn-greet">立即沟通</button>
+    </div>
+
+    <script>
+        console.log('🔍 年龄提取调试页面已加载');
+        console.log('');
+        console.log('📋 测试候选人列表：');
+        console.log('- 候选人A：28岁，本科（✅ 应该匹配）');
+        console.log('- 候选人B：37岁，硕士（❌ 年龄超出32岁）');
+        console.log('- 候选人C：30岁，大专（✅ 应该匹配）');
+        console.log('- 候选人D：20岁，本科（❌ 年龄低于22岁）');
+        console.log('- 候选人E：25岁，高中（❌ 学历低于大专）');
+        console.log('');
+        console.log('⚙️ 请在插件中设置：');
+        console.log('- 启用年龄筛选：22-32岁');
+        console.log('- 启用学历筛选：最低大专');
+        console.log('');
+        console.log('🔍 请注意观察控制台中的调试信息：');
+        console.log('- 年龄提取信息');
+        console.log('- 筛选设置信息');
+        console.log('- 筛选结果信息');
+    </script>
+</body>
+</html>
